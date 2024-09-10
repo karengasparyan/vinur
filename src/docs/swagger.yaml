@@ -1,0 +1,603 @@
+openapi: 3.1.0
+info:
+  title: Test task API
+  version: 1.0.0
+  description: API for Test task
+servers:
+  - url: http://localhost:7852
+
+paths:
+  /api/auth/sign-up:
+    post:
+      summary: Sign up user
+      tags:
+        - Auth
+      operationId: Sign up
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        200:
+          description: Registration successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: Please verify your email
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      email:
+                        type: string
+                        format: email
+                        nullable: true
+                      verified_at:
+                        type: string
+                        format: date-time
+                      created_at:
+                        type: string
+                        format: date-time
+                      updated_at:
+                        type: string
+                        format: date-time
+  /api/auth/sign-in:
+    post:
+      summary: Sign in user
+      tags:
+        - Auth
+      operationId: Sign in user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  default: user@example.com
+                password:
+                  type: string
+                  default: As12#sd45
+      responses:
+        200:
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: Login successfully
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          name:
+                            type: string
+                          email:
+                            type: string
+                            format: email
+                          verified_at:
+                            type: string
+                            format: date-time
+                          created_at:
+                            type: string
+                            format: date-time
+                          updated_at:
+                            type: string
+                            format: date-time
+                          accessToken:
+                            type: string
+                          refreshToken:
+                            type: string
+  /api/auth/confirm-email:
+    post:
+      summary: Confirm token
+      tags:
+        - Auth
+      operationId: Confirm token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+      responses:
+        200:
+          description: Email successfully confirm
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: Email successfully confirm
+  /api/auth/forgot-password:
+    post:
+      summary: Send forgot password email
+      tags:
+        - Auth
+      operationId: Forgot password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        200:
+          description: Email successfully sent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: Email successfully sent
+  /api/auth/reset-password:
+    put:
+      summary: Reset user password
+      tags:
+        - Auth
+      operationId: Reset password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                password:
+                  type: string
+                repeatPassword:
+                  type: string
+      responses:
+        200:
+          description: Password successfully reset
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: Password successfully reset
+  /api/auth/access-token:
+    post:
+      summary: Get access token use refreshToken
+      tags:
+        - Auth
+      operationId: Access token details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                device:
+                  type: string
+      responses:
+        200:
+          description: Tokens data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: Tokens data
+                  data:
+                    type: object
+                    properties:
+                      accessToken:
+                        type: string
+                      refreshToken:
+                        type: string
+  /api/auth/logout:
+    post:
+      summary: Logout user
+      tags:
+        - Auth
+      operationId: Logout
+      security:
+        - BearerAuth: [ ]
+      responses:
+        200:
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: Logout successful
+  /api/users/me:
+    get:
+      summary: Get current user data
+      tags:
+        - Users
+      operationId: GetCurrentUserData
+      security:
+        - BearerAuth: [ ]
+      responses:
+        200:
+          description: User data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: User data
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      email:
+                        type: string
+                        format: email
+                      verified_at:
+                        type: string
+                        format: date-time
+                      created_at:
+                        type: string
+                        format: date-time
+                      updated_at:
+                        type: string
+                        format: date-time
+  /api/users:
+    put:
+      summary: Update user information
+      operationId: Update user
+      tags:
+        - Users
+      security:
+        - BearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Karen
+      responses:
+        200:
+          description: Update successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: Update successfully
+    delete:
+      summary: Destroy user
+      operationId: DestroyUser
+      tags:
+        - Users
+      security:
+        - BearerAuth: [ ]
+      responses:
+        200:
+          description: Destroy successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: Destroy successfully
+  /api/users/change-password:
+    put:
+      summary: Update user password
+      tags:
+        - Users
+      security:
+        - BearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                oldPassword:
+                  type: string
+                  description: The old password of the user
+                password:
+                  type: string
+                  description: The new password for the user
+      responses:
+        200:
+          description: Update user password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: Password change successfully
+  /api/tasks:
+    post:
+      summary: Create Task
+      tags:
+        - Tasks
+      operationId: Create Task
+      security:
+        - BearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskRequestBody"
+      responses:
+        200:
+          description: Create Task
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: Task create successfully
+    get:
+      summary: Tasks list
+      tags:
+        - Tasks
+      operationId: Tasks list
+      security:
+        - BearerAuth: [ ]
+      responses:
+        200:
+          description: Tasks list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: Tasks list
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/TaskResponseBody"
+                    count:
+                      type: number
+  /api/tasks/{id}:
+    put:
+      summary: Update task
+      tags:
+        - Tasks
+      operationId: File upload
+      security:
+        - BearerAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the task to retrieve
+          schema:
+            type: string
+            format: uuid
+          example: "3d2052b7-7744-4d52-94dd-e671d476bb43"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskRequestBody"
+      responses:
+        200:
+          description: Task update
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: Task update successfully
+    get:
+      summary: Task get by id
+      tags:
+        - Tasks
+      operationId: Task get by id
+      security:
+        - BearerAuth: [ ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the task to retrieve
+          schema:
+            type: string
+            format: uuid
+          example: "3d2052b7-7744-4d52-94dd-e671d476bb43"
+      responses:
+        200:
+          description: Task get
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: Task update successfully
+                  data:
+                    $ref: "#/components/schemas/TaskResponseBody"
+components:
+  schemas:
+    TaskRequestBody:
+      type: object
+      properties:
+        assignee_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          required: true
+          default: test
+        description:
+          type: string
+          required: false
+          default: test description
+        priority:
+          type: number
+          enum: [ 1, 2, 3, 4, 5 ]
+          required: false
+          default: 3
+        status:
+          type: string
+          enum: [ TO_DO, In_Progress, DONE ]
+          required: false
+          default: TO_DO
+        due_date:
+          type: string
+          format: date-time
+          required: true
+          default: 2024-12-12
+        time_tracking:
+          type: number
+          required: false
+          default: 2
+    TaskResponseBody:
+      type: object
+      properties:
+        assignee_id:
+          type: string
+          format: uuid
+        reporter_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          required: true
+          default: test
+        description:
+          type: string
+          required: false
+          default: test description
+        priority:
+          type: number
+          enum: [ 1, 2, 3, 4, 5 ]
+          required: false
+          default: 3
+        status:
+          type: string
+          enum: [ TO_DO, In_Progress, DONE ]
+          required: false
+          default: TO_DO
+        due_date:
+          type: string
+          format: date-time
+          required: true
+          default: 2024-12-12
+        time_tracking:
+          type: number
+          required: false
+          default: 2
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
