@@ -3,12 +3,10 @@ import request from 'supertest';
 import app from '../index';
 
 export const authorization = async () => {
-  await Redis.initialize();
-
   const response = await request(app)
     .post('/api/auth/sign-in')
     .send({
-      email: 'user@example.com',
+      email: 'test@example.com',
       password: 'As12#sd45'
     })
     .set('Content-Type', 'application/json');

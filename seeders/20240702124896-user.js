@@ -14,6 +14,22 @@ module.exports = {
           //As12#sd45
           password: '0006f25698a7d419138e9653400e3fbdfbc3b019eaae54457d1c4c715b2a3372',
           verified_at: '2024-09-10 19:20:57.0'
+        },
+        {
+          id: user_id,
+          name: 'Example1',
+          email: 'user1@example.com',
+          //As12#sd45
+          password: '0006f25698a7d419138e9653400e3fbdfbc3b019eaae54457d1c4c715b2a3372',
+          verified_at: '2024-09-10 19:20:57.0'
+        },
+        {
+          id: user_id,
+          name: 'Test',
+          email: 'test@example.com',
+          //As12#sd45
+          password: '0006f25698a7d419138e9653400e3fbdfbc3b019eaae54457d1c4c715b2a3372',
+          verified_at: '2024-09-10 19:20:57.0'
         }
       ]);
 
