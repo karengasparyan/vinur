@@ -36,10 +36,18 @@ export enum SortOrder {
 }
 
 export enum SortField {
+  TITLE = 'title',
   NAME = 'name',
   EMAIL = 'email',
-  MIMETYPE = 'mimetype',
-  EXTENSION = 'extension',
+  DESCRIPTION = 'description',
+  DUE_DATE = 'due_date',
+  PRIORITY = 'priority',
+  STATUS = 'status',
+  TIME_TRACKING = 'time_tracking',
+  AVERAGE_TIME_TRACKING = 'average_time_tracking',
+  MAXIMUM_TIME_TRACKING = 'maximum_time_tracking',
+  MINIMUM_TIME_TRACKING = 'minimum_time_tracking',
+  SUCCESS_COUNT = 'success_count',
   CREATED_AT = 'created_at',
   UPDATED_AT = 'updated_at'
 }

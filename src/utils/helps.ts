@@ -1,8 +1,8 @@
 import sha256 from 'crypto-js/sha256';
 import { decode, sign, verify } from 'jsonwebtoken';
-import { JWT_SECRET_ACCESS, JWT_SECRET_REFRESH, USER_PASSWORD_SECRET } from '../config';
+import { JWT_SECRET_ACCESS, JWT_SECRET_REFRESH, USER_PASSWORD_SECRET } from '../config/config';
 import { SIZE_LIMIT } from './constants';
-import { redisClient } from '../options/Redis';
+import { Redis } from '../options/Redis';
 import { Users } from '../models';
 
 export const hashedPassword = (password: string): string => {
@@ -21,7 +21,7 @@ export const decodeToken = async (token: string) => {
   return decode(token) as { user: Users };
 };
 
-export const getPagination = (page: number, size: number) => {
+export const getPagination = (page?: number, size?: number) => {
   const limit = size ? +size : SIZE_LIMIT;
 
   const offset = page ? (+page - 1) * limit : 0;
@@ -50,9 +50,9 @@ export const getTokens = async (user: Users): Promise<{ accessToken: string; ref
 
   const refreshToken: string = await generateToken(user, JWT_SECRET_REFRESH as string, '72h');
 
-  await redisClient.set(`users:${user.id}:accessToken`, accessToken);
+  await Redis.getClient().set(`users:${user.id}:accessToken`, accessToken);
 
-  await redisClient.set(`users:${user.id}:refreshToken`, refreshToken);
+  await Redis.getClient().set(`users:${user.id}:refreshToken`, refreshToken);
 
   return { accessToken, refreshToken };
 };

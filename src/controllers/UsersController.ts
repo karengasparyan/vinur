@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { Status, Success } from '../types/Global';
 import * as users from '../services/Users';
 import { ChangePasswordType, UpdateInfoType } from '../schemas/users.schema';
+import { FiltersType } from '../schemas/global.schema';
 
 export default class UsersController {
   static Me = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
@@ -68,4 +69,19 @@ export default class UsersController {
     }
   };
 
+  static Report = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
+    try {
+      const payload = req.query as FiltersType;
+
+      const data = await users.report(payload);
+
+      return res.status(Status.OK).json({
+        success: Success.OK,
+        message: 'Report data',
+        ...data
+      });
+    } catch (e) {
+      return next(e);
+    }
+  };
 }

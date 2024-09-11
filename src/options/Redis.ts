@@ -1,38 +1,34 @@
-import { createClient, RedisClientType, RedisFunctions, RedisModules, RedisScripts } from 'redis';
-import { NODE_ENV, REDIS_URL } from '../config';
+import { createClient, RedisClientType } from 'redis';
+import { NODE_ENV } from '../config/config';
 
-class Redis {
-  private static instance: Redis;
-  private static exists: boolean = false;
-  private readonly client: RedisClientType<RedisModules, RedisFunctions, RedisScripts>;
+export class Redis {
+  private static client: RedisClientType;
+  private static connected: boolean = false;
 
-  constructor(private readonly url?: string | null) {
-    this.client = createClient({
-      url: this.url || REDIS_URL,
-      socket: {
-        connectTimeout: 10000
-      }
-    });
+  public static async initialize() {
+    if (!Redis.connected) {
+      Redis.client = createClient();
 
-    !Redis.exists &&
-      this.client
+      return Redis.client
         .connect()
-        .then(() => console.info(`Redis connected ${NODE_ENV}`))
-        .catch((e: any) => console.error('Redis Client Error', e));
-  }
-
-  private connect(): Redis {
-    if (!Redis.exists) {
-      Redis.exists = true;
-      Redis.instance = new Redis(this.url);
+        .then(() => {
+          Redis.connected = true;
+          console.info(`Redis connected ${NODE_ENV}`);
+        })
+        .catch((e: any) => {
+          console.error('Redis Client Error', e);
+        });
     }
-    return Redis.instance;
   }
 
-  public clientInit(): RedisClientType<RedisModules, RedisFunctions, RedisScripts> {
-    this.connect();
-    return this.client;
+  public static getClient() {
+    return Redis.client;
+  }
+
+  public static async disconnect() {
+    if (Redis.connected) {
+      await Redis.client.quit();
+      Redis.connected = false;
+    }
   }
 }
-
-export const redisClient = new Redis().clientInit();

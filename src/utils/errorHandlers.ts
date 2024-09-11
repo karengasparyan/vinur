@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { NodeEnv, Status, Success } from '../types/Global';
-import { NODE_ENV } from '../config';
+import { NODE_ENV } from '../config/config';
 import HttpError from 'http-errors';
 
 export const serverIsRun = (req: Request, res: Response, next: NextFunction) => {

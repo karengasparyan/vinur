@@ -401,6 +401,83 @@ paths:
                   message:
                     type: string
                     example: Password change successfully
+  /api/users/report:
+    get:
+      summary: Users reports
+      tags:
+        - Users
+      operationId: Users list
+      security:
+        - BearerAuth: [ ]
+      parameters:
+        - in: query
+          name: page
+          required: false
+          description: Page
+          schema:
+            type: number
+          example: 1
+        - in: query
+          name: size
+          required: false
+          description: Size
+          schema:
+            type: number
+          example: 20
+        - in: query
+          name: search
+          required: false
+          description: Search min 2 symbol
+          schema:
+            type: string
+          example: test
+        - in: query
+          name: sortField
+          required: false
+          description: Sort by field
+          schema:
+            type: string
+            enum: [ name, average_time_tracking, maximum_time_tracking, minimum_time_tracking, success_count ]
+          example: name
+        - in: query
+          name: sortOrder
+          required: false
+          description: Sort by ASC or DESC
+          schema:
+            type: string
+            enum: [ ASC, DESC ]
+          example: ASC
+      responses:
+        200:
+          description: User data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: string
+                    example: ok
+                  message:
+                    type: string
+                    example: User data
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        average_time_tracking:
+                          type: number
+                        maximum_time_tracking:
+                          type: number
+                        minimum_time_tracking:
+                          type: number
+                        success_count:
+                          type: number
   /api/tasks:
     post:
       summary: Create Task
@@ -436,6 +513,44 @@ paths:
       operationId: Tasks list
       security:
         - BearerAuth: [ ]
+      parameters:
+        - in: query
+          name: page
+          required: false
+          description: Page
+          schema:
+            type: number
+          example: 1
+        - in: query
+          name: size
+          required: false
+          description: Size
+          schema:
+            type: number
+          example: 20
+        - in: query
+          name: search
+          required: false
+          description: Search min 2 symbol
+          schema:
+            type: string
+          example: test
+        - in: query
+          name: sortField
+          required: false
+          description: Sort by field
+          schema:
+            type: string
+            enum: [ title, description, priority, status, due_date, time_tracking ]
+          example: title
+        - in: query
+          name: sortOrder
+          required: false
+          description: Sort by ASC or DESC
+          schema:
+            type: string
+            enum: [ ASC, DESC ]
+          example: ASC
       responses:
         200:
           description: Tasks list

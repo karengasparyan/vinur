@@ -12,6 +12,8 @@ npm run build
 
 npm run start
 
+npm run test
+
 // for development
 // Swagger {host}/docs
 

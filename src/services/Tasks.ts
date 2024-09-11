@@ -1,12 +1,10 @@
 import HttpError from 'http-errors';
 import { GetAllData, SortField, SortOrder, Status } from '../types/Global';
-import { Op, Order, Sequelize } from 'sequelize';
+import { Op, Order } from 'sequelize';
 import { getPagination } from '../utils/helps';
 import Tasks from '../models/Tasks';
 import { CreateTaskType, UpdateTaskType } from '../schemas/tasks.schema';
 import { FiltersType } from '../schemas/global.schema';
-import { Users } from '../models';
-import { TaskStatus } from '../types/Tasks';
 
 export const getById = async (id: string): Promise<Tasks> => {
   const data = await Tasks.findByPk(id);
@@ -47,23 +45,5 @@ export const getAll = async ({ search, page, size, sortOrder, sortField }: Filte
     offset
   });
 
-  const statics = await Users.findAll({
-    attributes: [
-      'id',
-      'name',
-      [
-        Sequelize.literal(`(SELECT COALESCE(CAST(FLOOR(AVG(time_tracking)) AS INTEGER), 0) FROM tasks WHERE assignee_id = "Users"."id")`),
-        'average_time_tracking'
-      ],
-      [Sequelize.literal(`(SELECT COALESCE(MAX(time_tracking), 0) FROM tasks WHERE assignee_id = "Users"."id")`), 'maximum_time_tracking'],
-      [Sequelize.literal(`(SELECT COALESCE(MIN(time_tracking), 0) FROM tasks WHERE assignee_id = "Users"."id")`), 'minimum_time_tracking'],
-      [
-        Sequelize.literal(`(SELECT COALESCE(CAST(COUNT(*) AS INTEGER), 0) FROM tasks WHERE assignee_id = "Users"."id" AND status = :status)`),
-        'success_count'
-      ]
-    ],
-    replacements: { status: TaskStatus.DONE }
-  });
-
-  return { data: data.rows, count: data.count, statics };
+  return { data: data.rows, count: data.count };
 };

@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import * as users from '../services/Users';
 import { jwtError, validateToken } from '../utils/helps';
-import { JWT_SECRET_ACCESS } from '../config';
+import { JWT_SECRET_ACCESS } from '../config/config';
 import { Users } from '../models';
-import { redisClient } from '../options/Redis';
+import { Redis } from '../options/Redis';
 import { Status, Success } from '../types/Global';
 import { TOKEN_TYPE } from '../utils/constants';
 
@@ -25,7 +25,7 @@ export default function AuthorizationMiddleware() {
 
       const { user }: { user: Users } = await validateToken(token, JWT_SECRET_ACCESS as string);
 
-      const session = await redisClient.get(`users:${user.id}:accessToken`);
+      const session = await Redis.getClient().get(`users:${user.id}:accessToken`);
 
       if (!user || !session) {
         return res.status(Status.UNAUTHORIZED).json({

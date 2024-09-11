@@ -6,7 +6,7 @@
     "outDir": "dist",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "rootDir": "src",
+    "rootDir": ".",
     "resolveJsonModule": true,
     "allowJs": true,
     "esModuleInterop": true,
@@ -30,6 +30,10 @@
     "noEmitHelpers": true,
     "pretty": true
   },
-  "exclude": ["node_modules", "dist"],
-  "include": ["src"]
+  "exclude": ["node_modules", "dist",
+    "tests"
+  ],
+  "include": ["src/**/*.ts",
+    "tests/*.ts"
+  ]
 }

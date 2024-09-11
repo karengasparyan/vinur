@@ -9,8 +9,9 @@ import morgan from 'morgan';
 import indexRouter from './routes/index';
 import { errorHandler, errorNotFound, genericErrorHandler, serverIsRun } from './utils/errorHandlers';
 import { NodeEnv } from './types/Global';
-import { HOST, NODE_ENV, PORT } from './config';
+import { HOST, NODE_ENV, PORT } from './config/config';
 import { corsOptions } from './utils/helps';
+import { Redis } from './options/Redis';
 
 dotenv.config();
 
@@ -48,4 +49,8 @@ app.listen(PORT, async () => {
   console.info(`Api url ${HOST}:${PORT}/api`);
 
   console.info(`Swagger ${HOST}:${PORT}/docs`);
+
+  await Redis.initialize();
 });
+
+export default app;

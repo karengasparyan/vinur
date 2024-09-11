@@ -13,8 +13,8 @@ export const ParamsIdSchema = object({
 });
 
 export const Filters = {
-  page: coerce.number().min(1).max(100).default(PAGE_LIMIT),
-  size: coerce.number().min(1).max(100).default(SIZE_LIMIT),
+  page: coerce.number().min(1).max(100).default(PAGE_LIMIT).optional(),
+  size: coerce.number().min(1).max(100).default(SIZE_LIMIT).optional(),
   search: string().min(2).optional(),
   sortOrder: optional(nativeEnum(SortOrder).default(SortOrder.DESC)),
   sortField: optional(nativeEnum(SortField).default(SortField.UPDATED_AT))

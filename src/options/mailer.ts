@@ -1,7 +1,7 @@
 import path from 'path';
 import ejs from 'ejs';
 import nodemailer from 'nodemailer';
-import { EMAIL_FROM, EMAIL_HOST, EMAIL_PASSWORD, EMAIL_PORT, EMAIL_USER } from '../config';
+import { EMAIL_FROM, EMAIL_HOST, EMAIL_PASSWORD, EMAIL_PORT, EMAIL_USER } from '../config/config';
 import HttpError from 'http-errors';
 import { Status } from '../types/Global';
 
