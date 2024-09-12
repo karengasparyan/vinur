@@ -34,6 +34,11 @@ export enum SortOrder {
   ASC = 'ASC',
   DESC = 'DESC'
 }
+export enum ReportOperator {
+  AVG = 'AVG',
+  MAX = 'MAX',
+  MIN = 'MIN'
+}
 
 export enum SortField {
   TITLE = 'title',
@@ -43,10 +48,10 @@ export enum SortField {
   DUE_DATE = 'due_date',
   PRIORITY = 'priority',
   STATUS = 'status',
-  TIME_TRACKING = 'time_tracking',
-  AVERAGE_TIME_TRACKING = 'average_time_tracking',
-  MAXIMUM_TIME_TRACKING = 'maximum_time_tracking',
-  MINIMUM_TIME_TRACKING = 'minimum_time_tracking',
+  COMPLETED_AT = 'completed_at',
+  AVERAGE_COMPLETED_AT = 'average_completed_at',
+  MAXIMUM_COMPLETED_AT = 'maximum_completed_at',
+  MINIMUM_COMPLETED_AT = 'minimum_completed_at',
   SUCCESS_COUNT = 'success_count',
   CREATED_AT = 'created_at',
   UPDATED_AT = 'updated_at'

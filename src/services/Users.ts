@@ -1,17 +1,15 @@
-import { Users } from '../models';
+import { Tasks, Users } from '../models';
 import HttpError from 'http-errors';
-import { GetAllData, SortField, SortOrder, Status } from '../types/Global';
+import { GetAllData, ReportOperator, SortField, SortOrder, Status } from '../types/Global';
 import { ChangePasswordType, UpdateInfoType } from '../schemas/users.schema';
 import { Redis } from '../options/Redis';
-import { getPagination, hashedPassword } from '../utils/helps';
+import { getPagination, getReportDynamicQuery, hashedPassword } from '../utils/helps';
 import { Op, Order, Sequelize } from 'sequelize';
 import { TaskStatus } from '../types/Tasks';
 import { FiltersType } from '../schemas/global.schema';
 
 export const getById = async (id: string): Promise<Users> => {
-  const data: Users | null = await Users.findOne({
-    where: { id }
-  });
+  const data: Users | null = await Users.findByPk(id);
 
   if (!data) throw HttpError(Status.NOT_FOUND, 'User is not found');
 
@@ -62,19 +60,25 @@ export const report = async ({ search, page, size, sortOrder, sortField }: Filte
 
   const data: GetAllData<Users> = await Users.findAndCountAll({
     distinct: true,
+    include: [
+      {
+        as: 'tasks',
+        model: Tasks,
+        attributes: ['id', 'title', 'description', 'priority', 'status', 'due_date', 'completed_at']
+      }
+    ],
     attributes: [
       'id',
       'name',
-      [
-        Sequelize.literal(`(SELECT COALESCE(CAST(FLOOR(AVG(time_tracking)) AS INTEGER), 0) FROM tasks WHERE assignee_id = "Users"."id")`),
-        'average_time_tracking'
-      ],
-      [Sequelize.literal(`(SELECT COALESCE(MAX(time_tracking), 0) FROM tasks WHERE assignee_id = "Users"."id")`), 'maximum_time_tracking'],
-      [Sequelize.literal(`(SELECT COALESCE(MIN(time_tracking), 0) FROM tasks WHERE assignee_id = "Users"."id")`), 'minimum_time_tracking'],
+      [getReportDynamicQuery(ReportOperator.AVG), 'average_completed_at'],
+      [getReportDynamicQuery(ReportOperator.MAX), 'maximum_completed_at'],
+      [getReportDynamicQuery(ReportOperator.MIN), 'minimum_completed_at'],
       [
         Sequelize.literal(`(SELECT COALESCE(CAST(COUNT(*) AS INTEGER), 0) FROM tasks WHERE assignee_id = "Users"."id" AND status = :status)`),
         'success_count'
-      ]
+      ],
+      'created_at',
+      'updated_at'
     ],
     where: {
       ...(search && {

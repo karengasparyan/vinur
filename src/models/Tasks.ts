@@ -20,7 +20,7 @@ export default class Tasks extends Model {
 
   public declare due_date: Date;
 
-  public declare time_tracking: number; //hours
+  public declare completed_at: Date;
 
   public declare readonly created_at: Date;
 
@@ -82,11 +82,11 @@ Tasks.init(
       }
     },
     due_date: {
-      type: DataTypes.DATE,
+      type: 'TIMESTAMP',
       allowNull: false
     },
-    time_tracking: {
-      type: DataTypes.NUMBER(),
+    completed_at: {
+      type: 'TIMESTAMP',
       defaultValue: null,
       allowNull: true
     }
@@ -107,7 +107,14 @@ Users.hasMany(Tasks, {
 
 Tasks.belongsTo(Users, {
   foreignKey: 'assignee_id',
-  as: 'user',
+  as: 'assigner',
+  onUpdate: 'cascade',
+  onDelete: 'cascade'
+});
+
+Tasks.belongsTo(Users, {
+  foreignKey: 'reporter_id',
+  as: 'reporter',
   onUpdate: 'cascade',
   onDelete: 'cascade'
 });

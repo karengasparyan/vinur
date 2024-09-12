@@ -13,11 +13,11 @@ export default class Users extends Model {
 
   public declare verified_at: null | Date;
 
-  public declare average_time_tracking: number;
+  public declare average_completed_at: number;
 
-  public declare maximum_time_tracking: number;
+  public declare maximum_completed_at: number;
 
-  public declare minimum_time_tracking: number;
+  public declare minimum_completed_at: number;
 
   public declare success_count: number;
 

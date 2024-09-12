@@ -52,11 +52,11 @@ module.exports = {
             defaultValue: 'TO_DO'
           },
           due_date: {
-            type: Sequelize.DATE,
+            type: 'TIMESTAMP',
             allowNull: false
           },
-          time_tracking: {
-            type: Sequelize.INTEGER,
+          completed_at: {
+            type: 'TIMESTAMP',
             defaultValue: null,
             allowNull: true
           },

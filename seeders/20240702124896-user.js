@@ -1,14 +1,12 @@
 const { v4 } = require('uuid');
 
-const user_id = v4();
-
 module.exports = {
   up: async (queryInterface) => {
     const transaction = await queryInterface.sequelize.transaction();
     try {
       await queryInterface.bulkInsert('users', [
         {
-          id: user_id,
+          id: v4(),
           name: 'Example',
           email: 'user@example.com',
           //As12#sd45
@@ -16,7 +14,7 @@ module.exports = {
           verified_at: '2024-09-10 19:20:57.0'
         },
         {
-          id: user_id,
+          id: v4(),
           name: 'Example1',
           email: 'user1@example.com',
           //As12#sd45
@@ -24,7 +22,7 @@ module.exports = {
           verified_at: '2024-09-10 19:20:57.0'
         },
         {
-          id: user_id,
+          id: v4(),
           name: 'Test',
           email: 'test@example.com',
           //As12#sd45

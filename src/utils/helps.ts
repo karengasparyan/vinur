@@ -4,6 +4,8 @@ import { JWT_SECRET_ACCESS, JWT_SECRET_REFRESH, USER_PASSWORD_SECRET } from '../
 import { SIZE_LIMIT } from './constants';
 import { Redis } from '../options/Redis';
 import { Users } from '../models';
+import { ReportOperator } from '../types/Global';
+import { Sequelize } from 'sequelize';
 
 export const hashedPassword = (password: string): string => {
   return sha256(sha256(password).toString() + USER_PASSWORD_SECRET).toString();
@@ -55,4 +57,12 @@ export const getTokens = async (user: Users): Promise<{ accessToken: string; ref
   await Redis.getClient().set(`users:${user.id}:refreshToken`, refreshToken);
 
   return { accessToken, refreshToken };
+};
+
+export const getReportDynamicQuery = (operator: ReportOperator) => {
+  return Sequelize.literal(`(SELECT COALESCE(TO_CHAR(INTERVAL '1 second' * ${operator}(EXTRACT(EPOCH FROM completed_at - created_at)), CONCAT('HH24:MI', ' hour')), '00:00 hour')
+            FROM tasks 
+          WHERE assignee_id = "Users"."id" 
+            AND completed_at IS NOT NULL 
+            AND created_at IS NOT NULL)`);
 };

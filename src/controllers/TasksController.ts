@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { Status, Success } from '../types/Global';
 import * as tasks from '../services/Tasks';
 import { FiltersType, ParamsIdType } from '../schemas/global.schema';
-import { CreateTaskType, UpdateTaskType } from '../schemas/tasks.schema';
+import { CreateTaskType, UpdateTaskStatusType, UpdateTaskType } from '../schemas/tasks.schema';
 
 export default class TasksController {
   static Create = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
@@ -34,6 +34,24 @@ export default class TasksController {
       return res.status(Status.OK).json({
         success: Success.OK,
         message: 'Task update successfully',
+        data
+      });
+    } catch (e) {
+      return next(e);
+    }
+  };
+
+  static UpdateStatus = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
+    try {
+      const { id } = req.params as ParamsIdType;
+
+      const { status } = req.body as UpdateTaskStatusType;
+
+      const data = await tasks.updateStatus(id, status);
+
+      return res.status(Status.OK).json({
+        success: Success.OK,
+        message: 'Task status update successfully',
         data
       });
     } catch (e) {
